@@ -6,7 +6,8 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "locally": "ts-node src/locally.ts"
   },
   "dependencies": {
     "aws-sdk": "^2.636.0",
