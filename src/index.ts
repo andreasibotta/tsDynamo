@@ -13,11 +13,11 @@ const dynamoDB = new DynamoDB.DocumentClient({
 const tableName = 'testTable';
 
 const scanParams: DynamoDB.DocumentClient.ScanInput = {
-  TableName: 'testTable',
+  TableName: tableName,
 };
 
 const putParams: DynamoDB.DocumentClient.PutItemInput = {
-  TableName: 'testTable',
+  TableName: tableName,
   Item: {
     Artist: 'John Lennon',
     SongTitle: 'Imagine',
@@ -25,7 +25,7 @@ const putParams: DynamoDB.DocumentClient.PutItemInput = {
 };
 
 const getParams: DynamoDB.DocumentClient.GetItemInput = {
-  TableName: 'testTable',
+  TableName: tableName,
   Key: {
     'Artist': 'John Lennon',
     'SongTitle': 'Imagine'
