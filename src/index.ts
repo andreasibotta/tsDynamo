@@ -4,6 +4,7 @@ import { SQSHandler } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import { DynamoDB } from 'aws-sdk';
 import {config } from './config/config'
+import { Song,SongKey } from './song';
 
 AWS.config.update({ region: 'REGION' });
 
@@ -17,20 +18,23 @@ const scanParams: DynamoDB.DocumentClient.ScanInput = {
   TableName: tableName,
 };
 
+const imagine: Song = {
+  Artist: 'John Lennon',
+  SongTitle: 'Imagine',
+  Year: 1976
+}
 const putParams: DynamoDB.DocumentClient.PutItemInput = {
   TableName: tableName,
-  Item: {
-    Artist: 'John Lennon',
-    SongTitle: 'Imagine',
-  },
+  Item: imagine,
 };
 
+const key: SongKey = {
+  Artist: 'John Lennon',
+  SongTitle: 'Imagine'
+}
 const getParams: DynamoDB.DocumentClient.GetItemInput = {
   TableName: tableName,
-  Key: {
-    'Artist': 'John Lennon',
-    'SongTitle': 'Imagine'
-  },
+  Key: key,
 };
 
 const handler: SQSHandler = async (event) => {
