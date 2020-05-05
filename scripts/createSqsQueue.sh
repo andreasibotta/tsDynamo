@@ -1,0 +1,1 @@
+aws sqs --endpoint-url http://localhost:4576 create-queue --queue-name test-queue
