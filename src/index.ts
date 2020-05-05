@@ -1,40 +1,52 @@
 'use strict';
 
-import 'source-map-support/register';
 import { SQSHandler } from 'aws-lambda';
-import * as uuid from 'uuid';
 import * as AWS from 'aws-sdk';
-import { DynamoDB, Endpoint } from 'aws-sdk';
-import { QueryOutput } from 'aws-sdk/clients/dynamodb';
+import { DynamoDB } from 'aws-sdk';
 
 AWS.config.update({ region: 'REGION' });
 
-// Create DynamoDB service object
-var ddb = new AWS.DynamoDB({
-  apiVersion: '2012-08-10',
+const dynamoDB = new DynamoDB.DocumentClient({
   endpoint: 'http://localhost:4569',
 });
 
-var params = {
+const tableName = 'testTable';
+
+const scanParams: DynamoDB.DocumentClient.ScanInput = {
   TableName: 'testTable',
+};
+
+const putParams: DynamoDB.DocumentClient.PutItemInput = {
+  TableName: 'testTable',
+  Item: {
+    Artist: 'John Lennon',
+    SongTitle: 'Imagine',
+  },
+};
+
+const getParams: DynamoDB.DocumentClient.GetItemInput = {
+  TableName: 'testTable',
+  Key: {
+    'Artist': 'John Lennon',
+    'SongTitle': 'Imagine'
+  },
 };
 
 const handler: SQSHandler = async (event) => {
   console.log('hello world!');
-  console.log(JSON.stringify(event));
+  // console.log(JSON.stringify(event));
 
-  ddb.scan(params, function (err, data: QueryOutput) {
-    if (err) {
-      console.log('Error', err);
-    } else {
-      console.log('Success', data.Items);
-      data.Items?.forEach(function (element, index, array) {
-        console.log(element.Artist.S + ' (' + element.SongTitle.S + ')');
-      });
-    }
-  });
+  let scanResult = await dynamoDB.scan(scanParams).promise();
+  console.log('Scan result: ', scanResult);
+
+  const putResult = await dynamoDB.put(putParams).promise();
+  console.log('Put result: ', putResult);
+
+  const getResult = await dynamoDB.get(getParams).promise();
+  console.log('Get result: ', getResult);
+
+  scanResult = await dynamoDB.scan(scanParams).promise();
+  console.log('Scan result: ', scanResult);
 };
 
 export { handler };
-
-
