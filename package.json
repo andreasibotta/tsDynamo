@@ -1,0 +1,11 @@
+{
+  "name": "sponsored-offer-events-lambda",
+  "version": "0.0.1",
+  "description": "A couple of lambdas that will emit SponsoredOfferViewed events for incoming OfferViewed events if the offer is sponsored",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC"
+}
