@@ -3,14 +3,15 @@
 import { SQSHandler } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import { DynamoDB } from 'aws-sdk';
+import {config } from './config/config'
 
 AWS.config.update({ region: 'REGION' });
 
 const dynamoDB = new DynamoDB.DocumentClient({
-  endpoint: 'http://localhost:4569',
+  endpoint: config.endpoint,
 });
 
-const tableName = 'testTable';
+const tableName =  config.tableName;
 
 const scanParams: DynamoDB.DocumentClient.ScanInput = {
   TableName: tableName,
