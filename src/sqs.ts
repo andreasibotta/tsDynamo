@@ -20,8 +20,7 @@ export class Sqs {
           StringValue: '6',
         },
       },
-      MessageBody:
-        'Information about current NY Times fiction bestseller for week of 12/11/2016.',
+      MessageBody: JSON.stringify(message),
       QueueUrl: queueUrl,
     };
     sqs.sendMessage(params).promise();
