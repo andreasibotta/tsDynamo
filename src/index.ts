@@ -1,9 +1,7 @@
 'use strict';
 
-import { SQSHandler } from 'aws-lambda';
+import { SQSHandler, SQSEvent } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
-import { DynamoDB } from 'aws-sdk';
-import { config } from './config/config';
 import { Song, SongKey } from './song';
 import { SongStore } from './SongStore';
 
@@ -19,7 +17,7 @@ const songKey: SongKey = {
   SongTitle: 'Imagine',
 };
 
-const handler: SQSHandler = async (event) => {
+const handler: SQSHandler = async (event: SQSEvent) => {
   console.log('hello world!');
   // console.log(JSON.stringify(event));
 
