@@ -5,6 +5,7 @@ import * as AWS from 'aws-sdk';
 import { DynamoDB } from 'aws-sdk';
 import {config } from './config/config'
 import { Song,SongKey } from './song';
+import { SongStore} from './SongStore'
 
 AWS.config.update({ region: 'REGION' });
 
@@ -28,14 +29,10 @@ const putParams: DynamoDB.DocumentClient.PutItemInput = {
   Item: imagine,
 };
 
-const key: SongKey = {
+const songKey: SongKey = {
   Artist: 'John Lennon',
   SongTitle: 'Imagine'
 }
-const getParams: DynamoDB.DocumentClient.GetItemInput = {
-  TableName: tableName,
-  Key: key,
-};
 
 const handler: SQSHandler = async (event) => {
   console.log('hello world!');
@@ -47,7 +44,7 @@ const handler: SQSHandler = async (event) => {
   const putResult = await dynamoDB.put(putParams).promise();
   console.log('Put result: ', putResult);
 
-  const getResult = await dynamoDB.get(getParams).promise();
+  const getResult = await SongStore.getSong(songKey);
   console.log('Get result: ', getResult);
 
   scanResult = await dynamoDB.scan(scanParams).promise();
