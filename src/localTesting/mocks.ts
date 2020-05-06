@@ -20,24 +20,6 @@ const recordAttribute: SQSRecordAttributes = {
     'hello': messageAttribute
   }
   
-  const sqsRecord: SQSRecord = {
-    messageId: 'some-id',
-    receiptHandle: 'some-handle',
-    body: 'some-body',
-    attributes: recordAttribute,
-    messageAttributes: messageAttributes,
-    md5OfBody: 'hash',
-    eventSource: 'some-source',
-    eventSourceARN: 'some-arn',
-    awsRegion: 'some-region'
-  }
-  
-  export const sqsEvent: SQSEvent = {
-    Records: [
-      sqsRecord
-    ]
-  };
-  
   export const testContext: Context = {
     callbackWaitsForEmptyEventLoop: false,
     functionName: 'test',
@@ -53,4 +35,44 @@ const recordAttribute: SQSRecordAttributes = {
     succeed: () => {},
   };
 
+  const sqsRecord: ((body: string) => SQSRecord) = (body: string) => {return {
+    messageId: 'some-id',
+    receiptHandle: 'some-handle',
+    body: body,
+    attributes: recordAttribute,
+    messageAttributes: messageAttributes,
+    md5OfBody: 'hash',
+    eventSource: 'some-source',
+    eventSourceARN: 'some-arn',
+    awsRegion: 'some-region'
+  }};
+  
+  const rewardUpdatedJson = '{"reward":{"rewardUri":{"dom":"IB_MON","type":"OfferGroup","id":"148740"},"rewardType":"REWARD_TYPE_OFFER","campaignId":"62709","availability":\
+  {"lastRedeemableAt":{"millis":"1589439540000"},"hardStopAt":{"millis":"1589439540000"},"startAt":{"millis":"1588316340000"},\
+  "lastDiscoverableAt":{"millis":"1589439540000"},"launched":true},"displayInfo":{"imageUrlLarge":"https://product-images.ibotta.com/offer/maPYu5JfIbyRFz12NWmuPw-large.png",\
+  "name":"Gain Fireworks Scent Booster","imageUrlThumbnail":"https://product-images.ibotta.com/offer/thumbnail/maPYu5JfIbyRFz12NWmuPw.png",\
+  "imageUrl":"https://product-images.ibotta.com/offer/maPYu5JfIbyRFz12NWmuPw-normal.png","internalName":"Gain Fireworks Scent Booster 20.1 oz",\
+  "terms":"Offer valid on Gain Fireworks Scent Booster for any variety, 20.1 oz.","descriptionTemplate":"any variety, 20.1 oz"},\
+  "redemptionParameters":{"unlockRequired":true,"maxCompletionsPerTransaction":1},"offerInfo":{"offerCategories":[{"dom":"IB_MON","type":"Category","id":"10"}],\
+  "offerType":"OFFER_TYPE_DEFAULT"},"rewardVariantUris":[{"dom":"IB_MON","type":"Offer","id":"123b"},{"dom":"IB_MON","type":"Offer","id":"506755"}]},"eventHeader":{"eventUri":{"dom":"IB_SCH","type":"ibotta_pb.rewards.RewardUpdated",\
+  "id":"e1ba4db8-b2e9-4635-9f04-d58f6a37b4b9"},"eventAt":{"millis":"1588773975574"},"environment":"PROD","agent":"Ibotta_Monolith","host":"work-budget-0320c4733a4c523b5","revision":"1f3bfe9"},\
+  "rewardUri":{"dom":"IB_MON","type":"OfferGroup","id":"148740"},"updatedAt":{"millis":"1588264776000"}}'
+
+  export const rewardUpdatedSqsEvent: SQSEvent = {
+    Records: [
+      sqsRecord(rewardUpdatedJson)
+    ]
+  };
+
+  export const sponsoredOfferUpdatedSqsEvent: SQSEvent = {
+    Records: [
+      sqsRecord('hello')
+    ]
+  };
+
+  export const offerViewedSqsEvent: SQSEvent = {
+    Records: [
+      sqsRecord('hello')
+    ]
+  };
   

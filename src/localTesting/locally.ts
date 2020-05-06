@@ -1,6 +1,6 @@
 
-import {sqsEvent, testContext} from './mocks';
-import {handler } from '../index';
+import {rewardUpdatedSqsEvent, testContext} from './mocks';
+import { rewardUpdatedHandler } from '../index';
 
 
-handler(sqsEvent,testContext, (a) => console.log(a));
+rewardUpdatedHandler(rewardUpdatedSqsEvent,testContext, (a) => console.log(a));

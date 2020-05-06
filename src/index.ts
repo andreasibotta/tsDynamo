@@ -2,7 +2,6 @@
 
 import { SQSHandler, SQSEvent } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
-import { Song, SongKey } from './models/song';
 import { SongStore } from './ddb/songStore';
 import { Sqs } from './sqs/sqs';
 import moment = require('moment');
@@ -11,43 +10,36 @@ import { ibotta_pb as ib_core } from '@ibotta/pbjs-ib_core';
 
 AWS.config.update({ region: 'REGION' });
 
-const imagine: Song = {
-  Artist: 'John Lennon',
-  SongTitle: 'Imagine',
-  Year: 1978,
-};
-const songKey: SongKey = {
-  Artist: 'John Lennon',
-  SongTitle: 'Imagine',
-};
-
-const handler: SQSHandler = async (event: SQSEvent) => {
-  console.log('hello world!');
-  // console.log(JSON.stringify(event));
+const rewardUpdatedHandler: SQSHandler = async (event: SQSEvent) => {
+  console.log('RewardUpdated!');
+  const messageBody = event["Records"][0]["body"];
+  const rewardUpdated = ib_content.rewards.RewardUpdated.fromObject(JSON.parse(messageBody))
+  console.log("rewardUpdated", rewardUpdated)
+  console.log("rewardVariantUris", rewardUpdated.reward?.rewardVariantUris)
 
   let scanResult = await SongStore.scan();
   console.log('Scan result: ', scanResult);
 
-  const putResult = await SongStore.putSong(imagine);
-  console.log('Put result: ', putResult);
+  // const putResult = await SongStore.putSong(imagine);
+  // console.log('Put result: ', putResult);
 
-  const getResult = await SongStore.getSong(songKey);
-  console.log('Get result: ', getResult);
+  // const getResult = await SongStore.getSong(songKey);
+  // console.log('Get result: ', getResult);
 
-  scanResult = await SongStore.scan();
-  console.log('Scan result: ', scanResult);
+  // scanResult = await SongStore.scan();
+  // console.log('Scan result: ', scanResult);
 
-  const message = new ib_content.sponsored_offers.SponsoredOfferUpdated({
-    eventHeader: createTriggerEventHeader(false),
-    id: '234',
-    campaignId: '123',
-    categoryId: '345',
-    startDate: toTimestamp(moment.now()),
-    endDate: toTimestamp(moment.now()),
-    position: 7,
-    completedAt: toTimestamp(moment.now()),
-  });
-  Sqs.sendMessage('http://localhost:4576/queue/test-queue', message);
+  // const message = new ib_content.sponsored_offers.SponsoredOfferUpdated({
+  //   eventHeader: createTriggerEventHeader(false),
+  //   id: '234',
+  //   campaignId: '123',
+  //   categoryId: '345',
+  //   startDate: toTimestamp(moment.now()),
+  //   endDate: toTimestamp(moment.now()),
+  //   position: 7,
+  //   completedAt: toTimestamp(moment.now()),
+  // });
+  // Sqs.sendMessage('http://localhost:4576/queue/test-queue', message);
 };
 
 function toTimestamp(millis: number): ib_core.commons.Timestamp {
@@ -85,4 +77,4 @@ export function getEnvironment(): ib_content.system.Environment {
   }
 }
 
-export { handler };
+export { rewardUpdatedHandler };
