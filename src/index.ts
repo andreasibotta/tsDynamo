@@ -1,8 +1,7 @@
-
 'use strict';
 import { SQSHandler, SQSEvent } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
-import { SongStore } from './ddb/songStore';
+import { Store } from './ddb/store';
 import { Sqs } from './sqs/sqs';
 import moment = require('moment');
 import { ibotta_pb as ib_content } from '@ibotta/pbjs-ib_content';
@@ -21,27 +20,28 @@ const rewardUpdatedHandler: SQSHandler = async (event: SQSEvent) => {
   // console.log('rewardVariantUris', rewardUpdated.reward?.rewardVariantUris);
 
   if (typeof rewardUpdated.rewardUri?.id !== 'string') {
-    console.error("No id for incoming RewardUpdated");
+    console.error('No id for incoming RewardUpdated');
     return;
   }
 
   const rewardId: string = rewardUpdated.rewardUri?.id;
   const rewardUpdatedRecords: RewardUpdatedRecord[] = [];
-  rewardUpdated.reward?.rewardVariantUris?.forEach(variant => {
+  rewardUpdated.reward?.rewardVariantUris?.forEach((variant) => {
     if (typeof variant.id !== 'string') {
-      console.error("No id for incoming RewardUpdated");
+      console.error('No id for incoming RewardUpdated');
       return;
     }
-    
+
     const variantId = variant.id;
     rewardUpdatedRecords.push(new RewardUpdatedRecord(rewardId, variantId));
   });
-  
-  console.log("rewardUpdatedHandler:SQSHandler -> rewardUpdatedRecords", rewardUpdatedRecords);
 
-  
-  // let scanResult = await SongStore.scan();
-  // console.log('Scan result: ', scanResult);
+  console.log('rewardUpdatedRecords', rewardUpdatedRecords);
+
+  Store.putRewardUpdatedRecords(rewardUpdatedRecords);
+
+  let scanResult = await Store.scan();
+  console.log('Scan result: ', scanResult);
 
   // const putResult = await SongStore.putSong(imagine);
   // console.log('Put result: ', putResult);
