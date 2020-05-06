@@ -32,7 +32,6 @@ const recordAttribute: SQSRecordAttributes = {
     awsRegion: 'some-region'
   }
   
-import { handler } from './index';
   export const sqsEvent: SQSEvent = {
     Records: [
       sqsRecord

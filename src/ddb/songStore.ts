@@ -1,7 +1,7 @@
 import { DynamoDB } from 'aws-sdk';
-import {Store } from './Store'
-import {SongKey, Song}  from './song';
-import {config } from './config/config';
+import {Store } from './store'
+import {SongKey, Song}  from '../models/song';
+import {config } from '../config/config';
 
 const songTableName = config.tableName;
 

@@ -1,5 +1,5 @@
 import { DynamoDB } from 'aws-sdk';
-import { config } from './config/config';
+import { config } from '../config/config';
 
 const dynamoDB = new DynamoDB.DocumentClient({
   endpoint: config.endpoint,

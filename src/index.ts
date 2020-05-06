@@ -2,9 +2,9 @@
 
 import { SQSHandler, SQSEvent } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
-import { Song, SongKey } from './song';
-import { SongStore } from './SongStore';
-import { Sqs } from './sqs';
+import { Song, SongKey } from './models/song';
+import { SongStore } from './ddb/songStore';
+import { Sqs } from './sqs/sqs';
 import moment = require('moment');
 import { ibotta_pb as ib_content } from '@ibotta/pbjs-ib_content';
 import { ibotta_pb as ib_core } from '@ibotta/pbjs-ib_core';
