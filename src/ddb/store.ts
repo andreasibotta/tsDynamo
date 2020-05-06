@@ -11,7 +11,7 @@ export class Store {
     // }
 
     static putRewardUpdatedRecords(rewardUpdatedRecords: RewardUpdatedRecord[]): Promise<DynamoDB.DocumentClient.BatchWriteItemOutput> {
-        return Ddb.putItems(tableName, [{'pk': '123', 'sk': 'abc'}, {'pk':'456','sk':'def'}]);
+        return Ddb.putItems(tableName, rewardUpdatedRecords);
     }
 
     static scan(): Promise<DynamoDB.DocumentClient.ScanOutput> {

@@ -33,22 +33,19 @@ export class Ddb {
     tableName: string,
     items: any[]
   ): Promise<DynamoDB.DocumentClient.BatchWriteItemOutput> {
-    let games: any[] = [];
+    let paramsItems: any[] = [];
 
     items.forEach((item) => {
-      games.push({
+      paramsItems.push({
         PutRequest: {
-          Item: {
-            pk: item['pk'],
-            sk: item['sk'],
-          },
+          Item: item,
         },
       });
     });
 
     let params = {
       RequestItems: {
-        testTable: games,
+        testTable: paramsItems,
       },
     };
 
