@@ -1,5 +1,5 @@
-'use strict';
 
+'use strict';
 import { SQSHandler, SQSEvent } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import { SongStore } from './ddb/songStore';
@@ -7,18 +7,41 @@ import { Sqs } from './sqs/sqs';
 import moment = require('moment');
 import { ibotta_pb as ib_content } from '@ibotta/pbjs-ib_content';
 import { ibotta_pb as ib_core } from '@ibotta/pbjs-ib_core';
+import { RewardUpdatedRecord } from './models/rewardUpdatedRecord';
 
 AWS.config.update({ region: 'REGION' });
 
 const rewardUpdatedHandler: SQSHandler = async (event: SQSEvent) => {
   console.log('RewardUpdated!');
-  const messageBody = event["Records"][0]["body"];
-  const rewardUpdated = ib_content.rewards.RewardUpdated.fromObject(JSON.parse(messageBody))
-  console.log("rewardUpdated", rewardUpdated)
-  console.log("rewardVariantUris", rewardUpdated.reward?.rewardVariantUris)
+  const messageBody = event['Records'][0]['body'];
+  const rewardUpdated = ib_content.rewards.RewardUpdated.fromObject(
+    JSON.parse(messageBody)
+  );
+  // console.log('rewardUpdated', rewardUpdated);
+  // console.log('rewardVariantUris', rewardUpdated.reward?.rewardVariantUris);
 
-  let scanResult = await SongStore.scan();
-  console.log('Scan result: ', scanResult);
+  if (typeof rewardUpdated.rewardUri?.id !== 'string') {
+    console.error("No id for incoming RewardUpdated");
+    return;
+  }
+
+  const rewardId: string = rewardUpdated.rewardUri?.id;
+  const rewardUpdatedRecords: RewardUpdatedRecord[] = [];
+  rewardUpdated.reward?.rewardVariantUris?.forEach(variant => {
+    if (typeof variant.id !== 'string') {
+      console.error("No id for incoming RewardUpdated");
+      return;
+    }
+    
+    const variantId = variant.id;
+    rewardUpdatedRecords.push(new RewardUpdatedRecord(rewardId, variantId));
+  });
+  
+  console.log("rewardUpdatedHandler:SQSHandler -> rewardUpdatedRecords", rewardUpdatedRecords);
+
+  
+  // let scanResult = await SongStore.scan();
+  // console.log('Scan result: ', scanResult);
 
   // const putResult = await SongStore.putSong(imagine);
   // console.log('Put result: ', putResult);
