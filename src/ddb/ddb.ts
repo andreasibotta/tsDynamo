@@ -5,7 +5,7 @@ const dynamoDB = new DynamoDB.DocumentClient({
   endpoint: config.endpoint,
 });
 
-export class Store {
+export class Ddb {
   static getItem(tableName: string, key: any): Promise<DynamoDB.DocumentClient.GetItemOutput> {
     const getParams: DynamoDB.DocumentClient.GetItemInput = {
       TableName: tableName,

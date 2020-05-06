@@ -1,5 +1,5 @@
 import { DynamoDB } from 'aws-sdk';
-import {Store } from './store'
+import { Ddb } from './ddb'
 import {SongKey, Song}  from '../models/song';
 import {config } from '../config/config';
 
@@ -7,14 +7,14 @@ const songTableName = config.tableName;
 
 export class SongStore {
     static getSong(key: SongKey): Promise<DynamoDB.DocumentClient.GetItemOutput> {
-         return Store.getItem(songTableName, key)
+         return Ddb.getItem(songTableName, key)
     }
 
     static putSong(song: Song): Promise<DynamoDB.DocumentClient.PutItemOutput> {
-        return Store.putItem(songTableName, song);
+        return Ddb.putItem(songTableName, song);
     }
 
     static scan(): Promise<DynamoDB.DocumentClient.ScanOutput> {
-        return Store.scan(songTableName)
+        return Ddb.scan(songTableName)
     }
 }
