@@ -58,7 +58,7 @@ const sponsoredOfferUpdatedHandler: SQSHandler = async (event: SQSEvent) => {
   const sponsoredOfferUpdatedRecords: SponsoredOfferUpdatedRecord[] = [];
 
   const rewardIds =
-    souId === '123'
+    sou.eventHeader?.environment === 0
       ? [{ id: '567' }, { id: '789' }]
       : [{ id: '432' }, { id: '543' }];
 
