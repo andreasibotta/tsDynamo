@@ -16,7 +16,7 @@ export class Store {
     }
 
     static async putSponsoredOfferUpdatedRecords(sponsoredOfferUpdatedRecords: SponsoredOfferUpdatedRecord[]): Promise<DynamoDB.DocumentClient.BatchWriteItemOutput> {
-      return Ddb.putItems(tableName, sponsoredOfferUpdatedRecords);
+      return Ddb.putItems(tableName, sponsoredOfferUpdatedRecords.map( sou => sou.getObjectToStore()));
   }
 
     static async scan(): Promise<DynamoDB.DocumentClient.ScanOutput> {

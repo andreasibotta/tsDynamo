@@ -69,7 +69,7 @@ const sponsoredOfferUpdatedHandler: SQSHandler = async (event: SQSEvent) => {
     }
 
     const rewardId = reward.id;
-    sponsoredOfferUpdatedRecords.push(new SponsoredOfferUpdatedRecord(souId, rewardId, sou.startDate!!, sou.endDate!!));
+    sponsoredOfferUpdatedRecords.push(new SponsoredOfferUpdatedRecord(souId, rewardId, sou.startDate!!.millis as number, sou.endDate!!.millis as number));
   });
 
   console.log('sponsoredOfferUpdatedRecords', sponsoredOfferUpdatedRecords);
