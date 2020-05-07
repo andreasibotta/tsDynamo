@@ -7,8 +7,8 @@ import { SponsoredOfferUpdatedRecord } from '../models/sponsoredOfferUpdatedReco
 const tableName = config.tableName;
 
 export class Store {
-    // static getSong(key: SongKey): Promise<DynamoDB.DocumentClient.GetItemOutput> {
-    //      return Ddb.getItem(songTableName, key)
+    // static getItem(key: Key): Promise<DynamoDB.DocumentClient.GetItemOutput> {
+    //      return Ddb.getItem(tableName, key)
     // }
 
     static async putRewardUpdatedRecords(rewardUpdatedRecords: RewardUpdatedRecord[]): Promise<DynamoDB.DocumentClient.BatchWriteItemOutput> {
