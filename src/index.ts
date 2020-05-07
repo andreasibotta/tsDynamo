@@ -7,6 +7,7 @@ import moment = require('moment');
 import { ibotta_pb as ib_content } from '@ibotta/pbjs-ib_content';
 import { ibotta_pb as ib_core } from '@ibotta/pbjs-ib_core';
 import { RewardUpdatedRecord } from './models/rewardUpdatedRecord';
+import { SponsoredOfferUpdatedRecord } from './models/sponsoredOfferUpdatedRecord';
 
 AWS.config.update({ region: 'REGION' });
 
@@ -38,31 +39,45 @@ const rewardUpdatedHandler: SQSHandler = async (event: SQSEvent) => {
 
   console.log('rewardUpdatedRecords', rewardUpdatedRecords);
 
-  Store.putRewardUpdatedRecords(rewardUpdatedRecords);
+  await Store.putRewardUpdatedRecords(rewardUpdatedRecords);
 
   let scanResult = await Store.scan();
   console.log('Scan result: ', scanResult);
+};
 
-  // const putResult = await SongStore.putSong(imagine);
-  // console.log('Put result: ', putResult);
+const sponsoredOfferUpdatedHandler: SQSHandler = async (event: SQSEvent) => {
+  console.log('SponsoredOfferUpdated!');
+  const messageBody = event['Records'][0]['body'];
+  const sou = ib_content.sponsored_offers.SponsoredOfferUpdated.fromObject(
+    JSON.parse(messageBody)
+  );
+  // console.log('rewardUpdated', rewardUpdated);
+  // console.log('rewardVariantUris', rewardUpdated.reward?.rewardVariantUris);
 
-  // const getResult = await SongStore.getSong(songKey);
-  // console.log('Get result: ', getResult);
+  const souId: string = sou.id;
+  const sponsoredOfferUpdatedRecords: SponsoredOfferUpdatedRecord[] = [];
 
-  // scanResult = await SongStore.scan();
-  // console.log('Scan result: ', scanResult);
+  const rewardIds =
+    souId === '123'
+      ? [{ id: '567' }, { id: '789' }]
+      : [{ id: '432' }, { id: '543' }];
 
-  // const message = new ib_content.sponsored_offers.SponsoredOfferUpdated({
-  //   eventHeader: createTriggerEventHeader(false),
-  //   id: '234',
-  //   campaignId: '123',
-  //   categoryId: '345',
-  //   startDate: toTimestamp(moment.now()),
-  //   endDate: toTimestamp(moment.now()),
-  //   position: 7,
-  //   completedAt: toTimestamp(moment.now()),
-  // });
-  // Sqs.sendMessage('http://localhost:4576/queue/test-queue', message);
+  rewardIds.forEach((reward) => {
+    if (typeof reward.id !== 'string') {
+      console.error('No id for incoming RewardUpdated');
+      return;
+    }
+
+    const rewardId = reward.id;
+    sponsoredOfferUpdatedRecords.push(new SponsoredOfferUpdatedRecord(souId, rewardId, sou.startDate!!, sou.endDate!!));
+  });
+
+  console.log('sponsoredOfferUpdatedRecords', sponsoredOfferUpdatedRecords);
+
+  await Store.putSponsoredOfferUpdatedRecords(sponsoredOfferUpdatedRecords);
+
+  let scanResult = await Store.scan();
+  console.log('Scan result: ', scanResult);
 };
 
 function toTimestamp(millis: number): ib_core.commons.Timestamp {
@@ -100,4 +115,16 @@ export function getEnvironment(): ib_content.system.Environment {
   }
 }
 
-export { rewardUpdatedHandler };
+// const message = new ib_content.sponsored_offers.SponsoredOfferUpdated({
+//   eventHeader: createTriggerEventHeader(false),
+//   id: '234',
+//   campaignId: '123',
+//   categoryId: '345',
+//   startDate: toTimestamp(moment.now()),
+//   endDate: toTimestamp(moment.now()),
+//   position: 7,
+//   completedAt: toTimestamp(moment.now()),
+// });
+// Sqs.sendMessage('http://localhost:4576/queue/test-queue', message);
+
+export { rewardUpdatedHandler, sponsoredOfferUpdatedHandler };

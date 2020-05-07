@@ -64,9 +64,13 @@ const recordAttribute: SQSRecordAttributes = {
     ]
   };
 
+  const sponsoredOfferUpdatedJson = '{"eventHeader": {"eventUri": {"dom": 0,"type": "ibotta_pb.sponsored_offers.Updated.SponsoredOfferUpdated","id": "xx96cad0-b2d9-4b3f-a6f4-9f40fee7c246"},"eventAt": {\
+        "millis": 1577963470000},"environment": 0,"agent": "","host": "","revision": "","fake": false,"priority": 0},\
+    "id": "321","campaignId": "789","categoryId": "3","startDate": {"millis": 1577869868000},"endDate": {"millis": 1577963465000},"position": 1,"completedAt": {"millis": 1577963465000}}'
+
   export const sponsoredOfferUpdatedSqsEvent: SQSEvent = {
     Records: [
-      sqsRecord('hello')
+      sqsRecord(sponsoredOfferUpdatedJson)
     ]
   };
 

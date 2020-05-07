@@ -6,7 +6,7 @@ const dynamoDB = new DynamoDB.DocumentClient({
 });
 
 export class Ddb {
-  static getItem(
+  static async getItem(
     tableName: string,
     key: any
   ): Promise<DynamoDB.DocumentClient.GetItemOutput> {
@@ -17,7 +17,7 @@ export class Ddb {
     return dynamoDB.get(getParams).promise();
   }
 
-  static putItem(
+  static async putItem(
     tableName: string,
     item: any
   ): Promise<DynamoDB.DocumentClient.PutItemOutput> {
@@ -29,7 +29,7 @@ export class Ddb {
     return dynamoDB.put(putParams).promise();
   }
 
-  static putItems(
+  static async putItems(
     tableName: string,
     items: any[]
   ): Promise<DynamoDB.DocumentClient.BatchWriteItemOutput> {
@@ -52,7 +52,7 @@ export class Ddb {
     return dynamoDB.batchWrite(params).promise();
   }
 
-  static scan(tableName: string): Promise<DynamoDB.DocumentClient.ScanOutput> {
+  static async scan(tableName: string): Promise<DynamoDB.DocumentClient.ScanOutput> {
     const scanParams: DynamoDB.DocumentClient.ScanInput = {
       TableName: tableName,
     };
