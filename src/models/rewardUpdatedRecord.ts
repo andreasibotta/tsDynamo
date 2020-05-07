@@ -4,17 +4,17 @@ export const REWARD_PREFIX = 'REWARD#'
 export const REWARD_VARIANT_PREFIX = "RV#"
 
 export class RewardUpdatedRecord {
-  public pk: string;
-  public sk: string;
-  public gsi1pk: string;
-  public gsi1sk: string;
-  public type: string;
+  constructor(public rewardId: string, public rewardVariantId: string) {}
 
-  constructor(public rewardId: string, public rewardVariantId: string) {
-    this.pk = `${REWARD_PREFIX}${rewardId}`;
-    this.sk = `${REWARD_VARIANT_PREFIX}${rewardVariantId}`;
-    this.gsi1pk = `${REWARD_PREFIX}${rewardId}`;
-    this.gsi1sk = `${REWARD_VARIANT_PREFIX}${rewardVariantId}`;
-    this.type = REWARD_UPDATED_RECORD;
+  public getObjectToStore() {
+    return {
+      pk: `${REWARD_PREFIX}${this.rewardId}`,
+      sk: `${REWARD_VARIANT_PREFIX}${this.rewardVariantId}`,
+      gsi1pk: `${REWARD_PREFIX}${this.rewardId}`,
+      gsi1sk: `${REWARD_VARIANT_PREFIX}${this.rewardVariantId}`,
+      type:  REWARD_UPDATED_RECORD,
+      rewardId: this.rewardId,
+      rewardVariantId: this.rewardVariantId,
+    };
   }
 }

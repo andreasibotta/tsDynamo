@@ -17,32 +17,18 @@ const rewardUpdatedHandler: SQSHandler = async (event: SQSEvent) => {
   const rewardUpdated = ib_content.rewards.RewardUpdated.fromObject(
     JSON.parse(messageBody)
   );
-  // console.log('rewardUpdated', rewardUpdated);
-  // console.log('rewardVariantUris', rewardUpdated.reward?.rewardVariantUris);
 
-  if (typeof rewardUpdated.rewardUri?.id !== 'string') {
-    console.error('No id for incoming RewardUpdated');
-    return;
-  }
-
-  const rewardId: string = rewardUpdated.rewardUri?.id;
+  const rewardId: string = rewardUpdated.rewardUri?.id!!;
   const rewardUpdatedRecords: RewardUpdatedRecord[] = [];
   rewardUpdated.reward?.rewardVariantUris?.forEach((variant) => {
-    if (typeof variant.id !== 'string') {
-      console.error('No id for incoming RewardUpdated');
-      return;
-    }
-
-    const variantId = variant.id;
+    const variantId = variant.id!!;
     rewardUpdatedRecords.push(new RewardUpdatedRecord(rewardId, variantId));
   });
 
-  console.log('rewardUpdatedRecords', rewardUpdatedRecords);
-
   await Store.putRewardUpdatedRecords(rewardUpdatedRecords);
 
-  let scanResult = await Store.scan();
-  console.log('Scan result: ', scanResult);
+  // let scanResult = await Store.scan();
+  // console.log('Scan result: ', scanResult);
 };
 
 const sponsoredOfferUpdatedHandler: SQSHandler = async (event: SQSEvent) => {
@@ -51,8 +37,6 @@ const sponsoredOfferUpdatedHandler: SQSHandler = async (event: SQSEvent) => {
   const sou = ib_content.sponsored_offers.SponsoredOfferUpdated.fromObject(
     JSON.parse(messageBody)
   );
-  // console.log('rewardUpdated', rewardUpdated);
-  // console.log('rewardVariantUris', rewardUpdated.reward?.rewardVariantUris);
 
   const souId: string = sou.id;
   const sponsoredOfferUpdatedRecords: SponsoredOfferUpdatedRecord[] = [];
@@ -63,16 +47,9 @@ const sponsoredOfferUpdatedHandler: SQSHandler = async (event: SQSEvent) => {
       : [{ id: '432' }, { id: '543' }];
 
   rewardIds.forEach((reward) => {
-    if (typeof reward.id !== 'string') {
-      console.error('No id for incoming RewardUpdated');
-      return;
-    }
-
     const rewardId = reward.id;
     sponsoredOfferUpdatedRecords.push(new SponsoredOfferUpdatedRecord(souId, rewardId, sou.startDate!!.millis as number, sou.endDate!!.millis as number));
   });
-
-  console.log('sponsoredOfferUpdatedRecords', sponsoredOfferUpdatedRecords);
 
   await Store.putSponsoredOfferUpdatedRecords(sponsoredOfferUpdatedRecords);
 

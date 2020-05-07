@@ -12,7 +12,7 @@ export class Store {
     // }
 
     static async putRewardUpdatedRecords(rewardUpdatedRecords: RewardUpdatedRecord[]): Promise<DynamoDB.DocumentClient.BatchWriteItemOutput> {
-        return Ddb.putItems(tableName, rewardUpdatedRecords);
+        return Ddb.putItems(tableName, rewardUpdatedRecords.map( rur => rur.getObjectToStore()));
     }
 
     static async putSponsoredOfferUpdatedRecords(sponsoredOfferUpdatedRecords: SponsoredOfferUpdatedRecord[]): Promise<DynamoDB.DocumentClient.BatchWriteItemOutput> {
