@@ -13,7 +13,7 @@
     "@ibotta/pbjs-ib_content": "^4.9.0",
     "@ibotta/pbjs-ib_core": "^4.0.3",
     "aws-sdk": "^2.636.0",
-    "moment": "^2.25.3",
+    "moment": "^2.29.2",
     "uuid": "^8.0.0"
   },
   "devDependencies": {
